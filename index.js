@@ -23,12 +23,13 @@ async function run() {
 
   try {
 
-    const dataBase = client.db('passComments').collection('services');
+    const serviceDataBase = client.db('passComments').collection('services');
+    const reviewsDatabase = client.db('passComments').collection('reviews');
 
     app.get('/home', async (req, res) => {
 
       const query = {};
-      const cursor = dataBase.find(query).limit(3);
+      const cursor = serviceDataBase.find(query).limit(3);
       const services = await cursor.toArray();
       res.send(services);
 
@@ -37,9 +38,9 @@ async function run() {
     app.get('/services', async (req, res) => {
 
       const query = {};
-      const cursor = dataBase.find(query);
-      const AllServices = await cursor.toArray();
-      res.send(AllServices);
+      const cursor = serviceDataBase.find(query);
+      const allServices = await cursor.toArray();
+      res.send(allServices);
 
     })
 
@@ -47,11 +48,30 @@ async function run() {
 
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const details = await dataBase.findOne(query);
+      const details = await serviceDataBase.findOne(query);
       res.send(details);
 
     })
 
+    app.get('/reviews', async (req, res) => {
+
+      const query = {};
+      const cursor = reviewsDatabase.find(query);
+      const allReviews = await cursor.toArray();
+      res.send(allReviews);
+
+    })
+
+
+    app.get('/reviews/:id', async (req, res) => {
+
+      const id = req.params.id;
+      const query = { service_id: id };
+      const cursor = reviewsDatabase.find(query);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+
+    })
   }
   finally {
 
