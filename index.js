@@ -30,7 +30,7 @@ async function run() {
     app.get('/home', async (req, res) => {
 
       const query = {};
-      const cursor = servicesDataBase.find(query).limit(3);
+      const cursor = servicesDataBase.find(query).sort({ _id: -1 }).limit(3);
       const services = await cursor.toArray();
       res.send(services);
 
