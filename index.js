@@ -23,22 +23,33 @@ async function run() {
 
   try {
 
-    const serviceDataBase = client.db('passComments').collection('services');
+    const servicesDataBase = client.db('passComments').collection('services');
     const reviewsDatabase = client.db('passComments').collection('reviews');
+    const usersDatabase = client.db('passComments').collection('users');
 
     app.get('/home', async (req, res) => {
 
       const query = {};
-      const cursor = serviceDataBase.find(query).limit(3);
+      const cursor = servicesDataBase.find(query).limit(3);
       const services = await cursor.toArray();
       res.send(services);
 
     })
 
+    app.post('/services', async (req, res) => {
+      const service = req.body;
+      const result = await servicesDataBase.insertOne(service);
+      service.id = result.insertedId;
+
+      res.send(service);
+
+    })
+
+
     app.get('/services', async (req, res) => {
 
       const query = {};
-      const cursor = serviceDataBase.find(query);
+      const cursor = servicesDataBase.find(query);
       const allServices = await cursor.toArray();
       res.send(allServices);
 
@@ -48,7 +59,7 @@ async function run() {
 
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const details = await serviceDataBase.findOne(query);
+      const details = await servicesDataBase.findOne(query);
       res.send(details);
 
     })
@@ -72,6 +83,26 @@ async function run() {
       res.send(reviews);
 
     })
+
+
+    app.post('/users', async (req, res) => {
+
+      const user = req.body;
+      const result = await usersDatabase.insertOne(user);
+      user.id = result.insertedId;
+
+      res.send(user);
+    })
+
+    app.get('/users', async (req, res) => {
+
+      const query = {};
+      const cursor = usersDatabase.find(query);
+      const users = await cursor.toArray();
+      res.send(users);
+
+    })
+
   }
   finally {
 
