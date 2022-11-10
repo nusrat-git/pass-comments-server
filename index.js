@@ -93,6 +93,16 @@ async function run() {
 
     })
 
+    app.get('/myreviews/:email', async (req, res) => {
+
+      const email = req.params.email;
+      const query = { reviewer_email: email };
+      const cursor = reviewsDatabase.find(query);
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+
+    })
+
 
     app.post('/users', async (req, res) => {
 
