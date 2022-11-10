@@ -97,10 +97,17 @@ async function run() {
 
       const email = req.params.email;
       const query = { reviewer_email: email };
-      const cursor = reviewsDatabase.find(query);
+      const cursor = reviewsDatabase.find(query).sort({ _id: -1 });
       const reviews = await cursor.toArray();
       res.send(reviews);
 
+    })
+
+    app.delete('/reviews/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewsDatabase.deleteOne(query);
+      res.send(result);
     })
 
 
