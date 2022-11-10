@@ -82,6 +82,15 @@ async function run() {
 
     })
 
+    app.get('/home/reviews', async (req, res) => {
+
+      const query = {};
+      const cursor = reviewsDatabase.find(query).sort({ _id: -1 }).limit(6);
+      const allReviews = await cursor.toArray();
+      res.send(allReviews);
+
+    })
+
 
     app.get('/reviews/:id', async (req, res) => {
 
